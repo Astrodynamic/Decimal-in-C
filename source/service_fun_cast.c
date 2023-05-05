@@ -1,11 +1,5 @@
-#include "s21_decimal.h"
+#include "decimal.h"
 
-/**
- * @brief Function to push cah into end of str
- *
- * @param str String where to push char
- * @param c Char to push
- */
 void str_push(char *str, char c) {
   if (str) {
     str += strlen(str);
@@ -14,12 +8,6 @@ void str_push(char *str, char c) {
   }
 }
 
-/**
- * @brief Function to reverse string str
- *
- * @param str String to reverse
- * @return char* Reversed string
- */
 char *str_reverse(char *str) {
   char *new_str = calloc(BUFSIZ, sizeof(char));
   char *end = str + strlen(str) - 1;
@@ -30,13 +18,6 @@ char *str_reverse(char *str) {
   return str;
 }
 
-/**
- * @brief Function to divide string even number by 2
- *
- * @param str String number
- * @return true If number is dividible
- * @return false Otherwise
- */
 bool divide_str_by_two(char *str) {
   bool result = true;
   if (strlen(str) == 1 && (*str == '1' || *str == '0')) {
@@ -61,12 +42,6 @@ bool divide_str_by_two(char *str) {
   return result;
 }
 
-/**
- * @brief Function to get exponent bits from float number src
- *
- * @param src Float number
- * @return int Integer with exponent bits
- */
 int get_float_exp_bin(float src) {
   int result = 0;
   char *fstr = calloc(BUFSIZ, sizeof(char));
@@ -120,12 +95,6 @@ void *insert(const char *src, const char *str, size_t start_index) {
   return result;
 }
 
-/**
- * @brief Function to convert float number to integer string number
- *
- * @param src Float number to convert
- * @return char* Integer number in string form
- */
 char *float_in_str(const float src) {
   char *str = calloc(BUFSIZ, sizeof(char));
   snprintf(str, BUFSIZ, "%e", src);
@@ -146,13 +115,6 @@ char *float_in_str(const float src) {
   return str;
 }
 
-/**
- * @brief Function to determine if float string odd or even
- *
- * @param str String to determine
- * @return true if odd
- * @return false if even
- */
 bool is_str_float_odd(const char *str) {
   bool result = false;
   char *s = (char *)str + strlen(str) - 1;
@@ -160,22 +122,11 @@ bool is_str_float_odd(const char *str) {
   return result;
 }
 
-/**
- * @brief Function to decrement float string
- *
- * @param str Float string
- */
 void dec_float_str(char *str) {
   str += strlen(str) - 1;
   *str -= 1;
 }
 
-/**
- * @brief Function to calculate float mantissa
- *
- * @param src Float value
- * @return char* Mantissa bits
- */
 char *get_float_mantissa_bin(float src) {
   char *result = calloc(96 + 1, sizeof(char));
   char *fstr = float_in_str(src);
@@ -198,25 +149,13 @@ char *get_float_mantissa_bin(float src) {
   return result;
 }
 
-/**
- * @brief Function to set exponent bits in decimal value
- *
- * @param dst Decimal value where to put exponent
- * @param exp_bits Float value where to get exponent
- */
-void set_exp(s21_decimal *dst, int exp_bits) {
+void set_exp(castom_decimal *dst, int exp_bits) {
   int bit = 1 << 7;
   for (int i = 95 + 24; i >= 95 + 17; i--, bit >>= 1)
     if (!!(exp_bits & bit)) set_bit(dst, i);
 }
 
-/**
- * @brief Function to set mantissa bits in decimal value
- *
- * @param dst Decimal value where to put mantissa
- * @param mantissa_bits Float value where to get mantissa
- */
-void set_mantissa(s21_decimal *dst, char *mantissa_bits) {
+void set_mantissa(castom_decimal *dst, char *mantissa_bits) {
   char *end = mantissa_bits + strlen(mantissa_bits) - 1;
   for (int i = 0; i < 96 && end >= mantissa_bits; i++, end--) {
     if (*end == '1')
@@ -226,14 +165,7 @@ void set_mantissa(s21_decimal *dst, char *mantissa_bits) {
   }
 }
 
-/**
- * @brief Function to get low, medium and high bits of decimal value in string
- * form
- *
- * @param src Decimal value
- * @return char* Decimal bits in string form
- */
-char *get_decimal_bits_str(s21_decimal *src) {
+char *get_decimal_bits_str(castom_decimal *src) {
   char *result = NULL;
   if (src) {
     result = calloc(150, sizeof(char));
@@ -247,12 +179,6 @@ char *get_decimal_bits_str(s21_decimal *src) {
   return result;
 }
 
-/**
- * @brief Function to convert string decimal mantissa to float number
- *
- * @param mantissa Mantissa of decimal value
- * @return float Float result number
- */
 float get_float_from_dec_mantissa(const char *mantissa) {
   float result = 0.0F, pow2 = 1.0F;
   char *end = (char *)mantissa + strlen(mantissa) - 1;
@@ -264,14 +190,6 @@ float get_float_from_dec_mantissa(const char *mantissa) {
   return result;
 }
 
-/**
- * @brief Function to create float number using its integer part and exponent
- * part
- *
- * @param tmp Float integer part
- * @param exp Float exponent part
- * @return float Float number
- */
 float build_float(float tmp, int exp) {
   char *float_str_int = calloc(BUFSIZ, sizeof(char));
   snprintf(float_str_int, BUFSIZ, "%050.0f", tmp);
