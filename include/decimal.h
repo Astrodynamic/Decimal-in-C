@@ -41,24 +41,29 @@ typedef struct {
   int bits[B_ALL_BITS];
 } big_decimal;
 
-#define CREATE_ARITHMETIC_FUN(_1)                           \
-  int castom_##_1(castom_decimal value_1, castom_decimal value_2,    \
-               castom_decimal *result) {                       \
-    big_decimal b_v1 = transformation_to_big_dec(&value_1); \
-    big_decimal b_v2 = transformation_to_big_dec(&value_2); \
-    big_decimal b_r = create_big_dec(0, 0, 0, 0, false);    \
-    memset(result, 0, sizeof(castom_decimal));                 \
-    int flag = F_NV;                                        \
-    if ((flag = b_##_1(b_v1, b_v2, &b_r)) == F_NV)          \
-      flag = transformation_to_dec(&b_r, result);           \
-    return flag;                                            \
+#define CREATE_ARITHMETIC_FUN(_1)                                 \
+  int castom_##_1(castom_decimal value_1, castom_decimal value_2, \
+                  castom_decimal *result) {                       \
+    big_decimal b_v1 = transformation_to_big_dec(&value_1);       \
+    big_decimal b_v2 = transformation_to_big_dec(&value_2);       \
+    big_decimal b_r = create_big_dec(0, 0, 0, 0, false);          \
+    memset(result, 0, sizeof(castom_decimal));                    \
+    int flag = F_NV;                                              \
+    if ((flag = b_##_1(b_v1, b_v2, &b_r)) == F_NV)                \
+      flag = transformation_to_dec(&b_r, result);                 \
+    return flag;                                                  \
   }
 
-int castom_add(castom_decimal value_1, castom_decimal value_2, castom_decimal *result);
-int castom_sub(castom_decimal value_1, castom_decimal value_2, castom_decimal *result);
-int castom_mul(castom_decimal value_1, castom_decimal value_2, castom_decimal *result);
-int castom_div(castom_decimal value_1, castom_decimal value_2, castom_decimal *result);
-int castom_mod(castom_decimal value_1, castom_decimal value_2, castom_decimal *result);
+int castom_add(castom_decimal value_1, castom_decimal value_2,
+               castom_decimal *result);
+int castom_sub(castom_decimal value_1, castom_decimal value_2,
+               castom_decimal *result);
+int castom_mul(castom_decimal value_1, castom_decimal value_2,
+               castom_decimal *result);
+int castom_div(castom_decimal value_1, castom_decimal value_2,
+               castom_decimal *result);
+int castom_mod(castom_decimal value_1, castom_decimal value_2,
+               castom_decimal *result);
 
 int castom_is_less(castom_decimal a, castom_decimal b);
 int castom_is_less_or_equal(castom_decimal a, castom_decimal b);
@@ -135,8 +140,8 @@ int integer_part_calculation(big_decimal bv_1, big_decimal bv_2,
                              big_decimal *result, big_decimal *rest);
 void fractional_part(big_decimal div, big_decimal den, big_decimal *result);
 castom_decimal integer_part_calculation_dec(castom_decimal value_1,
-                                         castom_decimal value_2,
-                                         castom_decimal *result);
+                                            castom_decimal value_2,
+                                            castom_decimal *result);
 void shift_bits_to_left_dec(castom_decimal *src, int shift);
 void trim_insignificant_zeros(castom_decimal src, castom_decimal *result);
 

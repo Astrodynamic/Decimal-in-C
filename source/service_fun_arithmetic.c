@@ -235,8 +235,8 @@ void fractional_part(big_decimal div, big_decimal den, big_decimal *result) {
 }
 
 castom_decimal integer_part_calculation_dec(castom_decimal value_1,
-                                         castom_decimal value_2,
-                                         castom_decimal *result) {
+                                            castom_decimal value_2,
+                                            castom_decimal *result) {
   castom_decimal rest = create_dec(0, 0, 0, get_scale(&value_1), false);
   memset(result, 0, sizeof(castom_decimal));
   for (int i = MAN_BITS - 1; i >= L_BITS; --i) {
