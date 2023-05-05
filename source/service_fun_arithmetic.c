@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "decimal.h"
 
 int b_add(big_decimal bv_1, big_decimal bv_2, big_decimal *result) {
   int flag = F_NV;
@@ -234,23 +234,23 @@ void fractional_part(big_decimal div, big_decimal den, big_decimal *result) {
   b_set_scale(result, offset);
 }
 
-s21_decimal integer_part_calculation_dec(s21_decimal value_1,
-                                         s21_decimal value_2,
-                                         s21_decimal *result) {
-  s21_decimal rest = create_dec(0, 0, 0, get_scale(&value_1), false);
-  memset(result, 0, sizeof(s21_decimal));
+castom_decimal integer_part_calculation_dec(castom_decimal value_1,
+                                         castom_decimal value_2,
+                                         castom_decimal *result) {
+  castom_decimal rest = create_dec(0, 0, 0, get_scale(&value_1), false);
+  memset(result, 0, sizeof(castom_decimal));
   for (int i = MAN_BITS - 1; i >= L_BITS; --i) {
     shift_bits_to_left_dec(&rest, 1);
     if (get_bit(&value_1, i)) set_bit(&rest, 0);
-    if (s21_is_less_or_equal(value_2, rest)) {
+    if (castom_is_less_or_equal(value_2, rest)) {
       set_bit(result, i);
-      s21_sub(rest, value_2, &rest);
+      castom_sub(rest, value_2, &rest);
     }
   }
   return rest;
 }
 
-void shift_bits_to_left_dec(s21_decimal *src, int shift) {
+void shift_bits_to_left_dec(castom_decimal *src, int shift) {
   for (int i = 0; i < shift; ++i) {
     for (int j = H_BITS; j >= L_BITS; --j) {
       if (get_bit(src, (j + 1) * 32 - 1)) set_bit(src, (j + 1) * 32);
@@ -259,13 +259,13 @@ void shift_bits_to_left_dec(s21_decimal *src, int shift) {
   }
 }
 
-void trim_insignificant_zeros(s21_decimal src, s21_decimal *result) {
+void trim_insignificant_zeros(castom_decimal src, castom_decimal *result) {
   int s_src = get_scale(&src);
   if (s_src > 0) {
     clear_scale(&src);
-    s21_decimal t_den = create_dec(10, 0, 0, 0, false);
-    s21_decimal t_res = create_dec(0, 0, 0, 0, false);
-    s21_decimal rest;
+    castom_decimal t_den = create_dec(10, 0, 0, 0, false);
+    castom_decimal t_res = create_dec(0, 0, 0, 0, false);
+    castom_decimal rest;
     bool sign = get_bit(&src, DEC_BITS - 1);
     bool check = true;
     do {
@@ -281,6 +281,6 @@ void trim_insignificant_zeros(s21_decimal src, s21_decimal *result) {
     set_scale(result, s_src);
     if (sign) set_bit(result, DEC_BITS - 1);
   } else {
-    memcpy(result, &src, sizeof(s21_decimal));
+    memcpy(result, &src, sizeof(castom_decimal));
   }
 }

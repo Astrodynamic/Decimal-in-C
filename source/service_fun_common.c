@@ -1,6 +1,6 @@
-#include "s21_decimal.h"
+#include "decimal.h"
 
-bool get_bit(const s21_decimal *src, const size_t index) {
+bool get_bit(const castom_decimal *src, const size_t index) {
   int mask = (1U << (index % 0x20));
   return src->bits[index / 0x20] & mask;
 }
@@ -10,7 +10,7 @@ bool b_get_bit(const big_decimal *src, const size_t index) {
   return src->bits[index / 0x20] & mask;
 }
 
-void set_bit(s21_decimal *src, const size_t index) {
+void set_bit(castom_decimal *src, const size_t index) {
   int mask = (1U << (index % 0x20));
   src->bits[index / 0x20] |= mask;
 }
@@ -20,7 +20,7 @@ void b_set_bit(big_decimal *src, const size_t index) {
   src->bits[index / 0x20] |= mask;
 }
 
-void clear_bit(s21_decimal *src, const size_t index) {
+void clear_bit(castom_decimal *src, const size_t index) {
   int mask = ~(1U << (index % 0x20));
   src->bits[index / 0x20] &= mask;
 }
@@ -30,7 +30,7 @@ void b_clear_bit(big_decimal *src, const size_t index) {
   src->bits[index / 0x20] &= mask;
 }
 
-void toggle_bit(s21_decimal *src, const size_t index) {
+void toggle_bit(castom_decimal *src, const size_t index) {
   int mask = (1U << (index % 0x20));
   src->bits[index / 0x20] ^= mask;
 }
@@ -40,13 +40,13 @@ void toggle_bit(s21_decimal *src, const size_t index) {
 //   src->bits[index / 0x20] ^= mask;
 // }
 
-int get_scale(const s21_decimal *src) {
+int get_scale(const castom_decimal *src) {
   return (src->bits[S_BITS] & 0x00FF0000) >> 16;
 }
 
-void clear_scale(s21_decimal *src) { src->bits[S_BITS] &= (~0x00FF0000); }
+void clear_scale(castom_decimal *src) { src->bits[S_BITS] &= (~0x00FF0000); }
 
-void set_scale(s21_decimal *src, int scale) {
+void set_scale(castom_decimal *src, int scale) {
   clear_scale(src);
   src->bits[S_BITS] |= (scale << 16);
 }
@@ -62,8 +62,8 @@ void b_set_scale(big_decimal *src, int scale) {
   src->bits[B_S_BITS] |= (scale << 16);
 }
 
-s21_decimal create_dec(int l_b, int m_b, int h_b, int scale, bool sign) {
-  s21_decimal temp = {{l_b, m_b, h_b, ((scale << 16) | (sign << 31))}};
+castom_decimal create_dec(int l_b, int m_b, int h_b, int scale, bool sign) {
+  castom_decimal temp = {{l_b, m_b, h_b, ((scale << 16) | (sign << 31))}};
   return temp;
 }
 
@@ -74,7 +74,7 @@ big_decimal create_big_dec(const int l_b, const int m1_b, const int m2_b,
   return temp;
 }
 
-big_decimal transformation_to_big_dec(const s21_decimal *src) {
+big_decimal transformation_to_big_dec(const castom_decimal *src) {
   big_decimal temp = create_big_dec(0, 0, 0, 0, false);
   for (size_t i = L_BITS; i < S_BITS; ++i) temp.bits[i] = src->bits[i];
   b_set_scale(&temp, get_scale(src));
@@ -84,7 +84,7 @@ big_decimal transformation_to_big_dec(const s21_decimal *src) {
   return temp;
 }
 
-// void print_decimal_in_bin(const s21_decimal *decimal) {
+// void print_decimal_in_bin(const castom_decimal *decimal) {
 //   for (int i = DEC_BITS - 1; i >= 0; --i)
 //     printf("%d%s", get_bit(decimal, i),
 //            i % 8 == 0 ? i % 32 == 0 ? " | " : " " : "");
@@ -98,7 +98,7 @@ big_decimal transformation_to_big_dec(const s21_decimal *src) {
 //   putc('\n', stdout);
 // }
 
-bool get_sign(const s21_decimal *src) { return get_bit(src, DEC_BITS - 1); }
+bool get_sign(const castom_decimal *src) { return get_bit(src, DEC_BITS - 1); }
 
 bool b_get_sign(const big_decimal *src) {
   return b_get_bit(src, B_DEC_BITS - 1);
@@ -116,7 +116,7 @@ bool b_get_sign(const big_decimal *src) {
 //   src->bits[B_S_BITS] |= (rest << 4);
 // }
 
-bool is_zero_decimal(s21_decimal *src) {
+bool is_zero_decimal(castom_decimal *src) {
   bool flag = true;
   for (size_t i = L_BITS; i < S_BITS; ++i)
     if (src->bits[i] != 0) flag = false;
@@ -160,7 +160,7 @@ bool is_empty_big_part(big_decimal *src) {
 //   for (int i = 64; i >= 0; --i) putc(buf[i], stdout);
 // }
 
-int transformation_to_dec(big_decimal *b_dec, s21_decimal *dec) {
+int transformation_to_dec(big_decimal *b_dec, castom_decimal *dec) {
   int flag = F_NV;
   int scale = b_get_scale(b_dec);
   bool sign = b_get_sign(b_dec);
@@ -186,7 +186,7 @@ int transformation_to_dec(big_decimal *b_dec, s21_decimal *dec) {
   return flag;
 }
 
-void copy_dec_bits_to_dec(big_decimal *b_dec, s21_decimal *dec) {
+void copy_dec_bits_to_dec(big_decimal *b_dec, castom_decimal *dec) {
   for (size_t i = L_BITS; i < S_BITS; ++i) {
     dec->bits[i] = b_dec->bits[i];
   }

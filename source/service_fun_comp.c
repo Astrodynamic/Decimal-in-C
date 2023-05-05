@@ -1,4 +1,4 @@
-#include "s21_decimal.h"
+#include "decimal.h"
 
 bool is_less_big_mantissa(big_decimal *a, big_decimal *b) {
   int flag = false;
